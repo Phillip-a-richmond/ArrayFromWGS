@@ -37,7 +37,12 @@ BAM=/mnt/causes-data01/data/RICHMOND/Platinum/NA12878/N878_BWAmem_dupremoved_rea
 SAMPLE=NA12878  
 OUPTUT=$SAMPLE_AffyCytoscan.tsv  
 
-python SNPchipQuery.py -bam $BAM -bed AffyCytoScan_hg19.bed -Filetype CytoscanHD -ID $SAMPLE -o $OUTPUT
+python SNPchipQuery.py \  
+-bam $BAM \  
+-bed AffyCytoScan_hg19.bed \  
+-Filetype CytoscanHD \  
+-ID $SAMPLE \  
+-o $OUTPUT  
 
 
 
