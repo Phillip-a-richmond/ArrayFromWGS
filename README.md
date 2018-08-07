@@ -33,7 +33,7 @@ optional arguments:
   -Filetype FILETYPE  Two options: dbSNP || CytoscanHD  
 
 Example: 
-
+```
 BAM=/mnt/causes-data01/data/RICHMOND/Platinum/NA12878/N878_BWAmem_dupremoved_realigned.sorted.bam  
 SAMPLE=NA12878  
 OUPTUT=$SAMPLE_AffyCytoscan.tsv  
@@ -44,7 +44,7 @@ python SNPchipQuery.py \
 -Filetype CytoscanHD \  
 -ID $SAMPLE \  
 -o $OUTPUT  
-
+```
 
 
   
