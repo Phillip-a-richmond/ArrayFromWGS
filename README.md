@@ -7,12 +7,13 @@ This toolkit is designed to extract read-depth and genotype information from spe
 ## Recipe (AKA Set-up and Installation)
 
 1. Get dataset you want to use.  I'll demonstrate here with the Affymetrix Cytoscan:
-
+```
 wget ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/affyCytoScan.txt.gz  
 gunzip -c affyCytoScan.txt.gz > affyCytoScan.txt  
 grep -v "^#" affyCytoScan.txt | cut -f2,3,4,5,6,7,8 > AffyCytoScan_hg19.bed  
-
-*Currently only implemented for h19*
+# For GRCh37
+sed -e 's/^chr//g' AffyCytoScan_hg19.bed > AffyCytoScan_GRCh37.bed
+```
 
 2. Install required python libraries:
 
