@@ -1,9 +1,9 @@
-#!/opt/tools/miniconda/bin/python
 import argparse
 import os
 import sys
 import math
 import pysam
+from pybedtools import BedTool
 from string import maketrans
 
 
@@ -147,6 +147,7 @@ def CytoscanHD(ARGS):
         outFile = open(ARGS.o,'w')
         sampleID = ARGS.ID
 	
+        fasta = ARGS.Genome
 	# The table we're reading in has this format:
 	# chrom	start	stop	probeID	value	strand	start	stop
 	samfile = pysam.Samfile(ARGS.bam,"rb")		
@@ -159,23 +160,24 @@ def CytoscanHD(ARGS):
                 if line[0] != '#':
 			columns = line.split('\t')
 			chromosome = columns[0]
-			varPos = int(columns[1])
+			varPos = int(columns[2])
 			start = columns[1]
 			stop = columns[2]
 			probeID = columns[3]
-			
+			refBase = BedTool.seq((chrom,varPos-1,varPos),fasta)
+                        
 			#populate the variant class
 			varMan = Variant(chromosome,varPos,samfile)
 
 			try:
 				varMan.getInfo()
 			except(ValueError):
-				outFile.write("%s\t%s\t%s\t%s\t.\t.\t.\t.\n"%(chromosome,start,stop,probeID))
+				outFile.write("%s\t%s\t%s\t%s\t.\t.\t.\t.\t.\t.\n"%(chromosome,start,stop,probeID))
 			Acount = varMan.nucDict['A']
                         Tcount = varMan.nucDict['T']
                         Ccount = varMan.nucDict['C']
                         Gcount = varMan.nucDict['G']
-
+                        
 			outFile.write("%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\n"%(chromosome,start,stop,probeID,Acount,Tcount,Ccount,Gcount))
 
 if __name__  == "__main__":	
@@ -183,8 +185,9 @@ if __name__  == "__main__":
 	parser.add_argument("-bam",help="input your bam file",type=str)
 	parser.add_argument("-bed",help="input the bed file of snps",type=str)
 	parser.add_argument("-o",help="name of the ouput file",type=str)
-	parser.add_argument("-ID",help="name of the sample ID",type=str)
-	parser.add_argument("-Filetype",help="Two options: dbSNP || CytoscanHD",type=str)
+	parser.add_argument("--ID",help="name of the sample ID",type=str)
+	parser.add_argument("--Filetype",help="Two options: dbSNP || CytoscanHD",type=str)
+        parser.add_argument("--Genome",help="Path to your reference genome sequence",type=str)
 
 	args = parser.parse_args()
 
@@ -192,6 +195,7 @@ if __name__  == "__main__":
 	query = open(args.bed,'r')
 	outFile = open(args.o,'w')
 	sampleID = args.ID
+        
 
 	if args.Filetype == 'dbSNP':
 		SnpArray(args)
